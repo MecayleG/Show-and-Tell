@@ -18,7 +18,7 @@ app.use(session({
 
 const pg = require('pg');
 const Pool = pg.Pool;
-const connectionString = process.env.DATABASE_URL || 'postgresql://mdu:pg123@localhost:5432/showandtell';
+const connectionString = process.env.DATABASE_URL || 'postgresql://amirah:coder123/show_sql';
 const pool = new Pool({
     connectionString
 });
