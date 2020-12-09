@@ -22,3 +22,12 @@ const connectionString = process.env.DATABASE_URL || 'postgresql://amirah:coder1
 const pool = new Pool({
     connectionString
 });
+app.get("/", async function(req, res) {
+    res.render("index");
+});
+var port = process.env.PORT || 3007;
+
+//start everything up
+app.listen(port, function() {
+    console.log('App Started on port:', port);
+});
