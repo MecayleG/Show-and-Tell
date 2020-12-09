@@ -7,8 +7,8 @@ create table fruit(
     fruit_name text not null
 );
 create table fruit_fact(
-    id serial not null primary key,
-    fruit_id int not null,
+    
+    fruit_id serial not null primary key,
     fruit_fact text not null,
     foreign key(fruit_id) references fruit(fruit_id)
 );
