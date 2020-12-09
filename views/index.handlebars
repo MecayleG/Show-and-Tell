@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <form action="/fruit_name" method="GET">
+<h1>Fruit</h1>   
+<label for="fname">Insert fruit</label><br>
+  <input type="text" id="fname" name="fname">
+  <input type="submit">
+    </form>
+        <form action="/fruit_name" method="POST">
+        {{#each fruit_chosen}}
+<h1>{{fruit_name}}</h1>
+{{/each}}
+    </form>
+
+
+
+</body>
+</html>
