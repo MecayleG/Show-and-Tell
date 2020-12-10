@@ -22,13 +22,13 @@ const pool = new Pool({
 });
 const fruits = Show(pool)
 
-app.get("/", async function (req, res) {
+app.get("/", async function(req, res) {
     res.render("index", {
 
     });
 });
 
-app.get("/fruit_name", async function (req, res) {
+app.get("/fruit_name", async function(req, res) {
     const fruitName = req.query.fname;
     const returnedFruit = await fruits.insertFruit(fruitName)
     console.log(returnedFruit);
@@ -37,16 +37,15 @@ app.get("/fruit_name", async function (req, res) {
 
     });
 });
-app.post("/fruit_name", async function (req, res) {
+app.post("/fruit_name", async function(req, res) {
     const fruitName = req.body.fname;
     const returnedFruit = await fruits.insertFruit(fruitName)
-    res.render("index", {
-    });
+    res.render("index", {});
 });
 
 var port = process.env.PORT || 9090;
 
 //start everything up
-app.listen(port, function () {
+app.listen(port, function() {
     console.log('App Started on port:', port);
 });

@@ -30,7 +30,6 @@ async function init() {
         labelContainer.appendChild(document.createElement("div"));
     }
 }
-
 //setting up the audio model
 
 async function createModel() {
@@ -82,6 +81,9 @@ async function initAudio() {
 const fruitList = ['apple', 'banana', 'orange'];
 
 const appleConfirmation = new Audio('audio/confirm_apple.mp3');
+const bananaConfirmation = new Audio('audio/confirm_banana.mp3');
+const orangeConfirmation = new Audio('audio/confirm_orange.mp3');
+
 const appleFact1 = new Audio('audio/facts_apple.mp3');
 const appleQuestion1 = new Audio('audio/apple1.mp3');
 const appleQuestion2 = new Audio('audio/apple2.mp3');
@@ -106,9 +108,31 @@ function checkFruit(){
 async function predict() {
     // predict can take in an image, video or canvas html element
     const prediction = await model.predict(webcam.canvas);
-    for (let i = 0; i < maxPredictions; i++) {
-        const classPrediction =
-            prediction[i].className + ": " + prediction[i].probability.toFixed(2);
-        labelContainer.childNodes[i].innerHTML = classPrediction;
-    }
+
+    let highestProb = 0.90;
+    let fruitName = '';
+
+    prediction.forEach(function(element) {
+        console.log(element);
+        if (element.probability > highestProb) {
+            fruitName = element.className;
+            if (fruitName === 'Apple') {
+
+                appleConfirmation.play()
+            }
+        }
+        // } else if (fruitName === 'Banana') {
+        //     bananaConfirmation.play()
+        // } else if (fruitName === 'Orange') {
+        //     orangeConfirmation.play()
+        // }
+        console.log(fruitName)
+    }); // for (let i = 0; i < maxPredictions; i++) {
+    //     const classPrediction =
+    //         prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+    //     console.log(classPrediction);
+    //     if (classPrediction > 0.95) {
+    //     }
+
+    // labelContainer.childNodes[i].innerHTML = classPrediction;
 }
