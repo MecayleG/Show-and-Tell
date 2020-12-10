@@ -1,7 +1,9 @@
 const URL = "https://teachablemachine.withgoogle.com/models/txUw7MWU2/";
 const URLAudio = "https://teachablemachine.withgoogle.com/models/v-k7to6aL/";
 
-let model, webcam, labelContainer, maxPredictions, listening = false, currentWordSpoken = "", fruitName = "";
+let model, webcam, labelContainer, maxPredictions, listening = false,
+    currentWordSpoken = "",
+    fruitName = "";
 
 
 
@@ -12,6 +14,11 @@ const orangeConfirmation = new Audio('audio/confirm_orange.mp3');
 const appleFact = new Audio('audio/facts_apple.mp3');
 const appleQuestion1 = new Audio('audio/apple1.mp3');
 const appleQuestion2 = new Audio('audio/apple2.mp3');
+
+const orangeFact = new Audio('audio/fact_orange.mp3');
+const orangeQuestion1 = new Audio('audio/orange1.mp3');
+const orangeQuestion2 = new Audio('audio/orange2.mp3');
+
 
 function startListening() {
     listening = true;
@@ -67,6 +74,31 @@ async function createModel() {
     return recognizer;
 }
 
+function playFruitFacts(command, fruitName) {
+
+    switch (command) {
+        case 'Yes':
+            stopListening();
+
+            if (fruitName == "Apple") {
+                appleFact.play();
+
+            } else if (fruitName == "Orange") {
+                orangeFact.play();
+            }
+
+            break;
+        case 'No':
+            // orangeConfirmation.play();
+            stopListening();
+            break;
+        default:
+            return "";
+    }
+
+
+}
+
 async function initAudio() {
     const recognizer = await createModel();
     const classLabels = recognizer.wordLabels(); // get class labels
@@ -83,59 +115,47 @@ async function initAudio() {
     recognizer.listen(result => {
         const scores = result.scores; // probability of prediction for each class
         // render the probability scores per class
-        
+
         const highVoice = 0.90;
-        let command = ''
-        if (listening) { 
-            
-            
+        let command = '';
+        if (listening) {
+
+
             for (let i = 0; i < classLabels.length; i++) {
                 const scoresList = result.scores[i].toFixed(2);
                 const scoreLabel = classLabels[i]
-                // const audioclassPrediction = scoreLevels  + ": " + scoresList.toFixed(2);
-                // get the highest score
+                    // const audioclassPrediction = scoreLevels  + ": " + scoresList.toFixed(2);
+                    // get the highest score
                 if (scoresList > highVoice) {
                     command = scoreLabel
                     if (fruitName !== "") {
                         predict();
                         startListening()
-                        // yes  do what you want todo
-                        switch (command) {
-                            case 'Yes':
-                                stopListening();
-                               appleFact.play();
-                                break;
-                            case 'No':
-                                // orangeConfirmation.play();
-                               stopListening();
-                                break;
-                            default:
-                                return "";
-                        }
+                        playFruitFacts(command, fruitName)
+                            // yes  do what you want todo
+                    }
+                    console.log(command);
+
                 }
-    console.log(command);
-                    
-            }
 
-            // const scoreLevels = result.scores[i];
-            // console.log(scoresLevels)
+                // const scoreLevels = result.scores[i];
+                // console.log(scoresLevels)
 
-            
-            // const highVoice = 0.90;
-            // const command = ''
-            // // get the highest score
-            // if (scoresList > highVoice) {
-            //     command = scoreLevels
-            // }
-            // if this score is high
 
-            // at this point we should have a fruitName
-            
-                setTimeout(function(){
-                    
-                    
-                    stopListening()  },7000);
-                    
+                // const highVoice = 0.90;
+                // const command = ''
+                // // get the highest score
+                // if (scoresList > highVoice) {
+                //     command = scoreLevels
+                // }
+                // if this score is high
+
+                // at this point we should have a fruitName
+
+                setTimeout(function() {
+                    stopListening()
+                }, 15000);
+
                 // 
                 // appleFact1.play();
                 // hide the div
@@ -181,7 +201,7 @@ async function predict() {
 
     let highestProb = 0.90;
 
-    prediction.forEach(function (element) {
+    prediction.forEach(function(element) {
         // console.log(element);
         if (element.probability > highestProb) {
             fruitName = element.className;
