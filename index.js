@@ -27,6 +27,7 @@ app.get("/", async function (req, res) {
 
     });
 });
+
 app.get("/fruit_name", async function (req, res) {
     const fruitName = req.query.fname;
     const returnedFruit = await fruits.insertFruit(fruitName)
