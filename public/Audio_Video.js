@@ -30,7 +30,6 @@ async function init() {
         labelContainer.appendChild(document.createElement("div"));
     }
 }
-
 //setting up the audio model
 
 async function createModel() {
@@ -106,9 +105,23 @@ async function loop() {
 async function predict() {
     // predict can take in an image, video or canvas html element
     const prediction = await model.predict(webcam.canvas);
-    for (let i = 0; i < maxPredictions; i++) {
-        const classPrediction =
-            prediction[i].className + ": " + prediction[i].probability.toFixed(2);
-        labelContainer.childNodes[i].innerHTML = classPrediction;
-    }
+
+    let highestProb = 0.90;
+    let fruitName = '';
+
+    prediction.forEach(function(element) {
+        console.log(element);
+        if (element.probability > highestProb) {
+            fruitName = element.className
+            appleConfirmation.play()
+        }
+        console.log(fruitName)
+    }); // for (let i = 0; i < maxPredictions; i++) {
+    //     const classPrediction =
+    //         prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+    //     console.log(classPrediction);
+    //     if (classPrediction > 0.95) {
+    //     }
+
+    // labelContainer.childNodes[i].innerHTML = classPrediction;
 }
