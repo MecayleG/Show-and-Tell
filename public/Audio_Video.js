@@ -65,7 +65,7 @@ async function initAudio() {
         // render the probability scores per class
         for (let i = 0; i < classLabels.length; i++) {
             const audioclassPrediction = classLabels[i] + ": " + result.scores[i].toFixed(2);
-            audioLabelContainer.childNodes[i].innerHTML = audioclassPrediction;
+            // audioLabelContainer.childNodes[i].innerHTML = audioclassPrediction;
         }
     }, {
         includeSpectrogram: true, // in case listen should return result.spectrogram
@@ -95,14 +95,14 @@ async function loop() {
     window.requestAnimationFrame(loop);
 }
 
-// function checkFruit(){
+function checkFruit(){
 
-//     if(fruitList === "apple"){
+    if(fruitList === "apple"){
 
-//     appleConfirmation.play();
+    appleConfirmation.play();
 
-//     }
-// }
+    }
+}
 
 // run the webcam image through the image model
 async function predict() {
