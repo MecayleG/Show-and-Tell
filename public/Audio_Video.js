@@ -1,8 +1,27 @@
 const URL = "https://teachablemachine.withgoogle.com/models/txUw7MWU2/";
 const URLAudio = "https://teachablemachine.withgoogle.com/models/v-k7to6aL/";
 
+let model, webcam, labelContainer, maxPredictions, listening = false, currentWordSpoken = "", fruitName = "";
 
-let model, webcam, labelContainer, maxPredictions;
+
+
+const appleConfirmation = new Audio('audio/confirm_apple.mp3');
+const bananaConfirmation = new Audio('audio/confirm_banana.mp3');
+const orangeConfirmation = new Audio('audio/confirm_orange.mp3');
+
+const appleFact = new Audio('audio/facts_apple.mp3');
+const appleQuestion1 = new Audio('audio/apple1.mp3');
+const appleQuestion2 = new Audio('audio/apple2.mp3');
+
+function startListening() {
+    listening = true;
+    currentWordSpoken = ""
+}
+
+function stopListening() {
+    listening = false;
+    currentWordSpoken = "";
+}
 
 // Load the image model and setup the webcam
 async function init() {
@@ -54,6 +73,7 @@ async function initAudio() {
     const audioLabelContainer = document.getElementById("label-container");
     for (let i = 0; i < classLabels.length; i++) {
         audioLabelContainer.appendChild(document.createElement("div"));
+        console.log(audioLabelContainer);
     }
 
 
@@ -63,10 +83,72 @@ async function initAudio() {
     recognizer.listen(result => {
         const scores = result.scores; // probability of prediction for each class
         // render the probability scores per class
-        for (let i = 0; i < classLabels.length; i++) {
-            const audioclassPrediction = classLabels[i] + ": " + result.scores[i].toFixed(2);
-            // audioLabelContainer.childNodes[i].innerHTML = audioclassPrediction;
+        
+        const highVoice = 0.90;
+        let command = ''
+        if (listening) { 
+            
+            
+            for (let i = 0; i < classLabels.length; i++) {
+                const scoresList = result.scores[i].toFixed(2);
+                const scoreLabel = classLabels[i]
+                // const audioclassPrediction = scoreLevels  + ": " + scoresList.toFixed(2);
+                // get the highest score
+                if (scoresList > highVoice) {
+                    command = scoreLabel
+                    if (fruitName !== "") {
+                        predict();
+                        startListening()
+                        // yes  do what you want todo
+                        switch (command) {
+                            case 'Yes':
+                                stopListening();
+                               appleFact.play();
+                                break;
+                            case 'No':
+                                // orangeConfirmation.play();
+                               stopListening();
+                                break;
+                            default:
+                                return "";
+                        }
+                }
+    console.log(command);
+                    
+            }
+
+            // const scoreLevels = result.scores[i];
+            // console.log(scoresLevels)
+
+            
+            // const highVoice = 0.90;
+            // const command = ''
+            // // get the highest score
+            // if (scoresList > highVoice) {
+            //     command = scoreLevels
+            // }
+            // if this score is high
+
+            // at this point we should have a fruitName
+            
+                setTimeout(function(){
+                    
+                    
+                    stopListening()  },7000);
+                    
+                // 
+                // appleFact1.play();
+                // hide the div
+                // no
+            }
+
+
+
         }
+
+
+
+
     }, {
         includeSpectrogram: true, // in case listen should return result.spectrogram
         probabilityThreshold: 0.75,
@@ -78,15 +160,7 @@ async function initAudio() {
     // setTimeout(() => recognizer.stopListening(), 5000);
 }
 
-const fruitList = ['apple', 'banana', 'orange'];
 
-const appleConfirmation = new Audio('audio/confirm_apple.mp3');
-const bananaConfirmation = new Audio('audio/confirm_banana.mp3');
-const orangeConfirmation = new Audio('audio/confirm_orange.mp3');
-
-const appleFact1 = new Audio('audio/facts_apple.mp3');
-const appleQuestion1 = new Audio('audio/apple1.mp3');
-const appleQuestion2 = new Audio('audio/apple2.mp3');
 
 
 async function loop() {
@@ -95,14 +169,10 @@ async function loop() {
     window.requestAnimationFrame(loop);
 }
 
-function checkFruit(){
 
-    if(fruitList === "apple"){
 
-    appleConfirmation.play();
 
-    }
-}
+
 
 // run the webcam image through the image model
 async function predict() {
@@ -110,23 +180,34 @@ async function predict() {
     const prediction = await model.predict(webcam.canvas);
 
     let highestProb = 0.90;
-    let fruitName = '';
 
-    prediction.forEach(function(element) {
-        console.log(element);
+    prediction.forEach(function (element) {
+        // console.log(element);
         if (element.probability > highestProb) {
             fruitName = element.className;
-            if (fruitName === 'Apple') {
 
-                appleConfirmation.play()
+
+            switch (fruitName) {
+                case 'Apple':
+                    appleConfirmation.play();
+                    startListening();
+                    break;
+                case 'Orange':
+                    orangeConfirmation.play();
+                    startListening();
+                    break;
+                default:
+                    return "";
             }
+
+
         }
+
         // } else if (fruitName === 'Banana') {
         //     bananaConfirmation.play()
         // } else if (fruitName === 'Orange') {
         //     orangeConfirmation.play()
-        // }
-        console.log(fruitName)
+
     }); // for (let i = 0; i < maxPredictions; i++) {
     //     const classPrediction =
     //         prediction[i].className + ": " + prediction[i].probability.toFixed(2);
