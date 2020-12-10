@@ -27,6 +27,7 @@ app.get("/", async function (req, res) {
 
     });
 });
+
 app.get("/fruit_name", async function (req, res) {
     const fruitName = req.query.fname;
     const returnedFruit = await fruits.insertFruit(fruitName)
@@ -43,7 +44,7 @@ app.post("/fruit_name", async function (req, res) {
     });
 });
 
-var port = process.env.PORT || 3007;
+var port = process.env.PORT || 3008;
 
 //start everything up
 app.listen(port, function () {
