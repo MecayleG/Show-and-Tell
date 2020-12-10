@@ -81,6 +81,9 @@ async function initAudio() {
 const fruitList = ['apple', 'banana', 'orange'];
 
 const appleConfirmation = new Audio('audio/confirm_apple.mp3');
+const bananaConfirmation = new Audio('audio/confirm_banana.mp3');
+const orangeConfirmation = new Audio('audio/confirm_orange.mp3');
+
 const appleFact1 = new Audio('audio/facts_apple.mp3');
 const appleQuestion1 = new Audio('audio/apple1.mp3');
 const appleQuestion2 = new Audio('audio/apple2.mp3');
@@ -112,9 +115,17 @@ async function predict() {
     prediction.forEach(function(element) {
         console.log(element);
         if (element.probability > highestProb) {
-            fruitName = element.className
-            appleConfirmation.play()
+            fruitName = element.className;
+            if (fruitName === 'Apple') {
+
+                appleConfirmation.play()
+            }
         }
+        // } else if (fruitName === 'Banana') {
+        //     bananaConfirmation.play()
+        // } else if (fruitName === 'Orange') {
+        //     orangeConfirmation.play()
+        // }
         console.log(fruitName)
     }); // for (let i = 0; i < maxPredictions; i++) {
     //     const classPrediction =
