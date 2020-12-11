@@ -111,7 +111,7 @@ async function initAudio() {
                                 break;
                             case 'No':
                                 // orangeConfirmation.play();
-                               stopListening();
+                            //    stopListening();
                                 break;
                             default:
                                 return "";
@@ -140,10 +140,10 @@ async function initAudio() {
 
             // at this point we should have a fruitName
             
-                setTimeout(function(){
+                // setTimeout(function(){
                     
                     
-                    stopListening()  },7000);
+                //     stopListening()  },12000);
                     
                 // 
                 // appleFact1.play();
