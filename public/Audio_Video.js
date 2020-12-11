@@ -3,7 +3,7 @@ const URLAudio = "https://teachablemachine.withgoogle.com/models/v-k7to6aL/";
 
 let model, webcam, labelContainer, maxPredictions, listening = false, currentWordSpoken = "", fruitName = "";
 
-
+const introduction = new Audio('audio/intro.mp3');
 
 const appleConfirmation = new Audio('audio/confirm_apple.mp3');
 const bananaConfirmation = new Audio('audio/confirm_banana.mp3');
@@ -96,6 +96,10 @@ async function initAudio() {
                 // get the highest score
                 if (scoresList > highVoice) {
                     command = scoreLabel
+
+                    // if(fruitName === ""){
+                    //     introduction.play();
+                    // }
                     if (fruitName !== "") {
                         predict();
                         startListening()
@@ -112,7 +116,12 @@ async function initAudio() {
                             default:
                                 return "";
                         }
-                }
+                    }
+                //         else if (fruitName == ""){
+                //             introduction.play();
+
+                       
+                // }
     console.log(command);
                     
             }
@@ -173,6 +182,7 @@ async function loop() {
 
 
 
+var playedIntro = false;
 
 // run the webcam image through the image model
 async function predict() {
@@ -181,34 +191,49 @@ async function predict() {
 
     let highestProb = 0.90;
 
-    prediction.forEach(function (element) {
-        // console.log(element);
-        if (element.probability > highestProb) {
-            fruitName = element.className;
+    if (!playedIntro) {
+        introduction.play();
+        playedIntro = true;
+    } else {
 
+        prediction.forEach(function (element) {
+            // console.log(element);
+            if (element.probability > highestProb) {
+                fruitName = element.className;
+    
+    
+                switch (fruitName) {
+                    case 'Apple':
+                        appleConfirmation.play();
+                        startListening();
+                        break;
+                    case 'Orange':
+                        orangeConfirmation.play();
+                        startListening();
+                        break;
+                    default:
+                        
+                        setTimeout(function(){
+                            introduction.pause() ;
+                            introduction.currentTime = 0;
+                     },3000);
+        
+                } 
+    
+            }     
+    });
 
-            switch (fruitName) {
-                case 'Apple':
-                    appleConfirmation.play();
-                    startListening();
-                    break;
-                case 'Orange':
-                    orangeConfirmation.play();
-                    startListening();
-                    break;
-                default:
-                    return "";
-            }
+    
+}
+}
 
-
-        }
 
         // } else if (fruitName === 'Banana') {
         //     bananaConfirmation.play()
         // } else if (fruitName === 'Orange') {
         //     orangeConfirmation.play()
 
-    }); // for (let i = 0; i < maxPredictions; i++) {
+    /// for (let i = 0; i < maxPredictions; i++) {
     //     const classPrediction =
     //         prediction[i].className + ": " + prediction[i].probability.toFixed(2);
     //     console.log(classPrediction);
@@ -216,4 +241,3 @@ async function predict() {
     //     }
 
     // labelContainer.childNodes[i].innerHTML = classPrediction;
-}
